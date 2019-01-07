@@ -11,7 +11,7 @@ typedef struct
 {
 	char * nom ;
 	struct _element_connexion * liste_connexions;
-} ville ;
+} ville;
 
 typedef struct _connexion{
 	ville * destination;

@@ -6,10 +6,10 @@
 typedef struct _noeud {
 	ville * ville_noeud;
 	int * villes_visitees;
-	
+
 	int duree_previous_noeud;
 	int distance_previous_noeud;
-	
+
 	struct _element_noeud * liste_fils;
 } noeud;
 

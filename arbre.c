@@ -134,4 +134,6 @@ void affichage_premier_trajet(noeud * arbre, ville * arrivee)
 	*est_trouve=0;
 	premier_trajet(arbre,arrivee,chaine,est_trouve);
 	printf("%s", chaine);
+	free(chaine);
+	free(est_trouve);
 }
