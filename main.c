@@ -54,8 +54,14 @@ int main(int argc, char **argv)
 	
 	
 	//printf("\n\n");
-	affichage_arbre(arbre,0);
-	affichage_premier_trajet(arbre,Bayonne);
+	//affichage_arbre(arbre,0);
+	
+	printf("\n");
+	tous_trajet(arbre,Bayonne,0);
+	
+	printf("\n");
+	int est_trouve = 0;
+	//premier_trajet(arbre,Bayonne,&est_trouve);
 	
 	liberer_arbre(arbre);
 	

@@ -8,8 +8,10 @@ noeud * construction_arbre(ville * liste, ville * depart, ville * arrivee,int ha
 {
 	noeud * noeud_initial = allouer_noeud(depart);
 	*(noeud_initial->villes_visitees+indice_ville(liste,depart))=1;
-	noeud_initial->distance_previous_noeud=0;
-	noeud_initial->duree_previous_noeud=0;
+	
+	noeud_initial->liste_villes_visitees = (element_ville*) malloc(sizeof(element_ville));
+	noeud_initial->liste_villes_visitees->contenu = depart;
+	noeud_initial->liste_villes_visitees->next =NULL;
 	
 	remplir_arbre(liste,noeud_initial,arrivee,hauteur,0);
 	
@@ -27,16 +29,15 @@ noeud * allouer_noeud(ville * ville_ajoutee)
 	{
 		*(nouveau_noeud->villes_visitees+i) = 0;
 	}
+	nouveau_noeud->liste_villes_visitees = NULL;
 	
 	return nouveau_noeud;
 }
 
-element_noeud * ajouter_fils(ville * liste, noeud * parent,ville * ville_ajoutee,int duree,int distance)
+element_noeud * ajouter_fils(ville * liste, noeud * parent,ville * ville_ajoutee)
 {
 	element_noeud * nouveau_element = (element_noeud *) malloc(sizeof(element_noeud));
 	nouveau_element->contenu = allouer_noeud(ville_ajoutee);
-	nouveau_element->contenu->distance_previous_noeud = distance;
-	nouveau_element->contenu->duree_previous_noeud = duree;
 	
 	nouveau_element->next =parent->liste_fils;
 	parent->liste_fils = nouveau_element;
@@ -47,6 +48,8 @@ element_noeud * ajouter_fils(ville * liste, noeud * parent,ville * ville_ajoutee
 	}
 	*(nouveau_element->contenu->villes_visitees+indice_ville(liste,ville_ajoutee))=1;
 	
+	nouveau_element ->contenu->liste_villes_visitees = NULL;
+	ajouter_ville_visitee(parent,nouveau_element);
 	return nouveau_element;
 }
 
@@ -69,7 +72,7 @@ void remplir_arbre(ville* liste,noeud * parent,ville * arrivee, int hauteur_limi
 		{
 			if(*(parent->villes_visitees+indice_ville(liste,temp->contenu->destination)) == 0)
 			{
-				element_noeud * nouveau_fils = ajouter_fils(liste,parent,temp->contenu->destination,temp->contenu->duree_trajet,temp->contenu->distance);
+				element_noeud * nouveau_fils = ajouter_fils(liste,parent,temp->contenu->destination);
 				remplir_arbre(liste,nouveau_fils->contenu,arrivee,hauteur_limite,hauteur+1);
 			}
 			temp = temp->next;
@@ -100,40 +103,84 @@ void liberer_arbre(noeud * arbre)
 //******************************************************************************
 // Fonctions de recherche dans l'arbre
 //******************************************************************************
-//bhh
-void premier_trajet(noeud * arbre, ville * arrivee, char * chaine,int * est_trouve)
+
+void tous_trajet(noeud * arbre, ville * arrivee,int est_trouve)
 {
-	if(arbre->ville_noeud == arrivee)
+	if(arbre->ville_noeud == arrivee && est_trouve==0)
 	{
-		*est_trouve =1;
+		affichage_trajet_trouve(arbre,0);
+		printf("\n\n");
+		est_trouve==1;
 	}
-	else if(*est_trouve==0)
+	else
 	{
 		element_noeud * temp =arbre->liste_fils;
 		while(temp!=NULL)
 		{
-			//printf("%s\n",temp->contenu->ville_noeud->nom);
-			premier_trajet(temp->contenu,arrivee,chaine,est_trouve);
+			tous_trajet(temp->contenu,arrivee,est_trouve);
 			temp = temp->next;
 		}
 	}
-	
-	//printf("\n");
-	if(*est_trouve ==1)
+}
+
+void premier_trajet(noeud * arbre, ville * arrivee,int *est_trouve)
+{
+	if(arbre->ville_noeud == arrivee && *est_trouve==0)
 	{
-		strcat(chaine,arbre->ville_noeud->nom);
-		//printf("%s\n",arbre->ville_noeud->nom);
+		affichage_trajet_trouve(arbre,0);
+		printf("\n");
+		*est_trouve=1;
+	}
+	else
+	{
+		element_noeud * temp =arbre->liste_fils;
+		while(temp!=NULL)
+		{
+			premier_trajet(temp->contenu,arrivee,est_trouve);
+			temp = temp->next;
+		}
 	}
 }
 
-void affichage_premier_trajet(noeud * arbre, ville * arrivee)
+void affichage_trajet_trouve(noeud * arbre, int option)
 {
-	char * chaine = (char *) malloc(sizeof(char)*1000);
-	*chaine='\0';
-	int * est_trouve = (int *) malloc(sizeof(int));
-	*est_trouve=0;
-	premier_trajet(arbre,arrivee,chaine,est_trouve);
-	printf("%s", chaine);
-	free(chaine);
-	free(est_trouve);
+	element_ville * temp = arbre->liste_villes_visitees;
+	int somme_distance=0;
+	int somme_duree=0;
+	while(temp!=NULL)
+	{
+		printf("%s ", temp->contenu->nom);
+		
+		element_connexion * temp_co = temp->contenu->liste_connexions;
+		while(temp->next!=NULL && temp_co!=NULL && temp_co->contenu->destination!=temp->next->contenu)
+		{
+			temp_co = temp_co->next;
+		}
+		if(temp->next!=NULL)
+		{
+			printf("-> %dkm %dmin : ",temp_co->contenu->distance,temp_co->contenu->duree_trajet);
+			somme_distance+=temp_co->contenu->distance;
+			somme_duree+= temp_co->contenu->duree_trajet;
+		}
+		temp= temp->next;
+	}
+	printf(" == %dkm %dmin", somme_distance,somme_duree);
 }
+
+void ajouter_ville_visitee(noeud * parent, element_noeud * noeud_act)
+{
+	element_ville * temp_parent = parent->liste_villes_visitees;
+	element_ville * temp=(element_ville*) malloc(sizeof(element_ville));
+	noeud_act->contenu->liste_villes_visitees = temp;
+	
+	while(temp_parent !=NULL)
+	{
+		temp->contenu = temp_parent->contenu;
+		temp->next = (element_ville*) malloc(sizeof(element_ville));
+		temp = temp->next;
+		temp_parent = temp_parent->next;
+	}
+	temp->contenu = noeud_act->contenu->ville_noeud;
+	temp->next =NULL;
+}
+
