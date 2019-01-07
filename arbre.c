@@ -100,7 +100,7 @@ void liberer_arbre(noeud * arbre)
 //******************************************************************************
 // Fonctions de recherche dans l'arbre
 //******************************************************************************
-
+//bhh
 void premier_trajet(noeud * arbre, ville * arrivee, char * chaine,int * est_trouve)
 {
 	if(arbre->ville_noeud == arrivee)
