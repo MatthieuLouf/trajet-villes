@@ -2,6 +2,7 @@
 #define ARBRE_H
 
 #include <carte.h>
+#include <windows.h>//gestion couleurs
 
 typedef struct _noeud {
 	ville * ville_noeud;

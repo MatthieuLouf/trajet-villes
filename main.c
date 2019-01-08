@@ -132,8 +132,8 @@ void menu()
 		printf("\n	Programme de recherche de trajets \n\n");
 		
 		printf("	-> Entre %s et %s, %d trajets trouves! \n\n",depart->nom, arrive->nom,est_trouve);
-		printf("	1. Un trajet	2. Tous les trajets \n 	3. Trajet le plus court	4. Trajet le plus rapide	\n	5. Arbre des trajets \n	6. Changer de trajet	7. Quitter \n\n	Choix: ");
-		choix = demander_nb(1,6);
+		printf("	1. Un trajet	2. Tous les trajets \n\n 	3. Trajet le plus court    4. Trajet le plus rapide	\n\n	5. Arbre des trajets \n	6. Changer de trajet	7. Quitter \n\n	Choix: ");
+		choix = demander_nb(1,7);
 		
 		switch(choix)
 		{

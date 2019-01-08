@@ -1,5 +1,11 @@
 #include <arbre.h>
 
+void color(int t,int f)
+{
+	HANDLE H=GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(H,f*16+t);
+}
+
 //******************************************************************************
 // Fonctions de construction de l'arbre
 //******************************************************************************
@@ -355,11 +361,15 @@ void affichage_trajet_trouve(noeud * arbre)
 		}
 		if(temp->next!=NULL)
 		{
+			color(8,0);
 			printf("-> %dkm %dmin : ",temp_co->contenu->distance,temp_co->contenu->duree_trajet);
+			color(15,0);
 			somme_distance+=temp_co->contenu->distance;
 			somme_duree+= temp_co->contenu->duree_trajet;
 		}
 		temp= temp->next;
 	}
+	color(3,0);
 	printf(" == %dkm %dmin", somme_distance,somme_duree);
+	color(15,0);
 }
