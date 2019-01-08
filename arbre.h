@@ -3,6 +3,7 @@
 
 #include <carte.h>
 #include <windows.h>//gestion couleurs
+#include <string.h>
 
 typedef struct _noeud {
 	ville * ville_noeud;
@@ -65,8 +66,11 @@ int distance_trajet(element_ville * arrivee);
 void affichage_petite_distance(noeud * arbre, ville * arrivee,int *compt, int * ind_plus_court, int * plus_court);
 
 //******************************************************************************
-// Affichage trajet
+// Affichage trajet et arbre
 //******************************************************************************
 
+void ajout_decalage(int decalage);
+void affichage_arbre(noeud * parent, int decalage);
 void affichage_trajet_trouve(noeud * arbre);
+
 #endif

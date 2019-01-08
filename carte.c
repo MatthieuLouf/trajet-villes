@@ -1,5 +1,9 @@
 #include <carte.h>
 
+//******************************************************************************
+// Fonctions d'importation des villes et connexions
+//******************************************************************************
+
 ville * import_villes()
 {
 	char nom_fichier[] = "villes.csv";
@@ -24,6 +28,7 @@ ville * import_villes()
 			(liste_villes+k)->liste_connexions = NULL;
 		}
 		fclose(fichier_ville);
+		free(ma_ville);
 	}
 	else
 	{
@@ -94,6 +99,10 @@ int conversion_en_min(int heures, int minutes)
 	return tmp_minu;
 }
 
+//******************************************************************************
+// Fonction de libération des villes et de leurs structures internes
+//******************************************************************************
+
 void liberer_villes(ville * liste, int taille)
 {
 	for(int i =0;i<taille;i++)
@@ -111,4 +120,24 @@ void liberer_villes(ville * liste, int taille)
 		free((liste+i)->liste_connexions);
 	}
 	free(liste);
+}
+
+//******************************************************************************
+// Fonction d'affichage de la liste de villes et de leurs connexions
+//******************************************************************************
+
+void affichage_liste_destinations(ville * liste)
+{
+	for(int i=0;i<23;i++)
+	{
+		printf("%s\n",(liste+i)->nom);
+
+		element_connexion * temp = ((liste+i)->liste_connexions);
+		while(temp!=NULL)
+		{
+			connexion * temp_co = temp -> contenu;
+			printf("	%s %d %d\n",(temp_co->destination)->nom,temp_co->distance,temp_co->duree_trajet);
+			temp = temp->next;
+		}
+	}
 }

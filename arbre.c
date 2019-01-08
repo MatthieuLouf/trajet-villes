@@ -345,6 +345,30 @@ void affichage_petite_distance(noeud * arbre, ville * arrivee,int *compt, int * 
 // Affichage trajet
 //******************************************************************************
 
+void ajout_decalage(int decalage)
+{
+	for(int i=0;i<decalage;i++)
+	{
+		printf("	");
+	}
+}
+
+void affichage_arbre(noeud * parent, int decalage)
+{
+	if(parent!=NULL)
+	{
+		ajout_decalage(decalage);
+		printf("|-%s\n", parent->ville_noeud->nom);
+		
+		element_noeud * temp =parent->liste_fils;
+		while(temp!=NULL)
+		{
+			affichage_arbre(temp->contenu,decalage+1);
+			temp = temp->next;
+		}
+	}
+}
+
 void affichage_trajet_trouve(noeud * arbre)
 {
 	element_ville * temp = arbre->liste_villes_visitees;
@@ -373,3 +397,4 @@ void affichage_trajet_trouve(noeud * arbre)
 	printf(" == %dkm %dmin", somme_distance,somme_duree);
 	color(15,0);
 }
+

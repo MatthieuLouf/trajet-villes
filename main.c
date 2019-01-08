@@ -1,52 +1,8 @@
 #include <carte.h>
 #include <arbre.h>
-#include <string.h>
-//******************************************************************************
-// Affichage Arbre, destinations
-//******************************************************************************
-
-void affichage_liste_destinations(ville * liste)
-{
-	for(int i=0;i<23;i++)
-	{
-		printf("%s\n",(liste+i)->nom);
-
-		element_connexion * temp = ((liste+i)->liste_connexions);
-		while(temp!=NULL)
-		{
-			connexion * temp_co = temp -> contenu;
-			printf("	%s %d %d\n",(temp_co->destination)->nom,temp_co->distance,temp_co->duree_trajet);
-			temp = temp->next;
-		}
-	}
-}
-
-void ajout_decalage(int decalage)
-{
-	for(int i=0;i<decalage;i++)
-	{
-		printf("	");
-	}
-}
-
-void affichage_arbre(noeud * parent, int decalage)
-{
-	if(parent!=NULL)
-	{
-		ajout_decalage(decalage);
-		printf("|-%s\n", parent->ville_noeud->nom);
-		
-		element_noeud * temp =parent->liste_fils;
-		while(temp!=NULL)
-		{
-			affichage_arbre(temp->contenu,decalage+1);
-			temp = temp->next;
-		}
-	}
-}
 
 //******************************************************************************
-// Demander nb ou str
+// Demander nombre ou string
 //******************************************************************************
 
 int demander_nb(int min, int max)
@@ -100,7 +56,7 @@ char * demander_str()
 }
 
 //******************************************************************************
-// menu
+// Menu
 //******************************************************************************
 
 void menu()
@@ -108,6 +64,7 @@ void menu()
 	char * chaine = NULL;
 	int choix =0;
 	int est_trouve=0;
+	int trouve = 0;
 	int hauteur;
 	ville * liste = import_villes();
 	import_destination(liste);
@@ -138,8 +95,8 @@ void menu()
 		switch(choix)
 		{
 			case 1:
-				est_trouve = 0;
-				premier_trajet(arbre,arrive,&est_trouve);
+				trouve = 0;
+				premier_trajet(arbre,arrive,&trouve);
 				break;
 				
 			case 2:
