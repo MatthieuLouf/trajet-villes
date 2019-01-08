@@ -168,7 +168,7 @@ void menu()
 				arrive = get_ville(liste,chaine);
 				printf("Entrez la hauteur de l'arbre : ");
 				hauteur = demander_nb(1,23);
-				noeud * arbre = construction_arbre(liste,depart, arrive,hauteur);
+				arbre = construction_arbre(liste,depart, arrive,hauteur);
 				est_trouve=0;
 				nb_trajet(arbre,arrive,&est_trouve);
 				break;

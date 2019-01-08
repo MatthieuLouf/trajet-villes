@@ -59,9 +59,9 @@ int duree_trajet(element_ville * arrivee);
 //******************************************************************************
 
 void trajet_petite_distance(noeud * arbre, ville * arrivee);
-void trajet_petite_distance(noeud * arbre, ville * arrivee);
+void indice_petite_distance(noeud * arbre, ville * arrivee,int *compt, int * ind_plus_court, int * plus_court);
 int distance_trajet(element_ville * arrivee);
-int distance_trajet(element_ville * arrivee);
+void affichage_petite_distance(noeud * arbre, ville * arrivee,int *compt, int * ind_plus_court, int * plus_court);
 
 //******************************************************************************
 // Affichage trajet
