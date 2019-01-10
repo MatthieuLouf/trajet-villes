@@ -100,7 +100,7 @@ void menu()
 				break;
 				
 			case 2:
-				tous_trajet(arbre,arrive,0);
+				tous_trajet(arbre,arrive);
 				break;
 				
 			case 3:

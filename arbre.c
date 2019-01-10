@@ -1,11 +1,5 @@
 #include <arbre.h>
 
-void color(int t,int f)
-{
-	HANDLE H=GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(H,f*16+t);
-}
-
 //******************************************************************************
 // Fonctions de construction de l'arbre
 //******************************************************************************
@@ -14,13 +8,13 @@ noeud * construction_arbre(ville * liste, ville * depart, ville * arrivee,int ha
 {
 	noeud * noeud_initial = allouer_noeud(depart);
 	*(noeud_initial->villes_visitees+indice_ville(liste,depart))=1;
-	
+
 	noeud_initial->liste_villes_visitees = (element_ville*) malloc(sizeof(element_ville));
 	noeud_initial->liste_villes_visitees->contenu = depart;
 	noeud_initial->liste_villes_visitees->next =NULL;
-	
+
 	remplir_arbre(liste,noeud_initial,arrivee,hauteur,0);
-	
+
 	return noeud_initial;
 }
 
@@ -127,20 +121,19 @@ void ajouter_ville_visitee(noeud * parent, element_noeud * noeud_act)
 // Fonctions de recherche dans l'arbre
 //******************************************************************************
 
-void tous_trajet(noeud * arbre, ville * arrivee,int est_trouve)
+void tous_trajet(noeud * arbre, ville * arrivee)
 {
 	if(arbre->ville_noeud == arrivee)
 	{
 		affichage_trajet_trouve(arbre);
 		printf("\n\n");
-		est_trouve=1;
 	}
 	else
 	{
 		element_noeud * temp =arbre->liste_fils;
 		while(temp!=NULL)
 		{
-			tous_trajet(temp->contenu,arrivee,est_trouve);
+			tous_trajet(temp->contenu,arrivee);
 			temp = temp->next;
 		}
 	}
@@ -154,7 +147,7 @@ void premier_trajet(noeud * arbre, ville * arrivee,int *est_trouve)
 		printf("\n");
 		*est_trouve=1;
 	}
-	else
+	else if (* est_trouve== 0)
 	{
 		element_noeud * temp =arbre->liste_fils;
 		while(temp!=NULL)
@@ -195,7 +188,7 @@ void trajet_petite_duree(noeud * arbre, ville * arrivee)
 	int indice_distance_min = -1;
 	indice_petite_duree(arbre,arrivee,&nb_trajets2,&indice_distance_min,&distance_min);
 	int nb_trajets3=0;
-	affichage_petite_duree(arbre,arrivee,&nb_trajets3,&indice_distance_min,&distance_min);
+	affichage_petite_duree(arbre,arrivee,&nb_trajets3,&indice_distance_min);
 }
 
 void indice_petite_duree(noeud * arbre, ville * arrivee,int *compt, int * ind_plus_court, int * plus_court)
@@ -220,6 +213,27 @@ void indice_petite_duree(noeud * arbre, ville * arrivee,int *compt, int * ind_pl
 	}
 }
 
+void affichage_petite_duree(noeud * arbre, ville * arrivee,int *compt, int * ind_plus_court)
+{
+	if(arbre->ville_noeud == arrivee)
+	{
+		*compt =*compt+1;
+		if(*compt==*ind_plus_court)
+		{
+			affichage_trajet_trouve(arbre);
+		}
+	}
+	else
+	{
+		element_noeud * temp =arbre->liste_fils;
+		while(temp!=NULL)
+		{
+			affichage_petite_duree(temp->contenu,arrivee,compt,ind_plus_court);
+			temp = temp->next;
+		}
+	}
+}
+
 int duree_trajet(element_ville * arrivee)
 {
 	element_ville * temp = arrivee;
@@ -238,27 +252,6 @@ int duree_trajet(element_ville * arrivee)
 		temp= temp->next;
 	}
 	return somme_duree;
-}
-
-void affichage_petite_duree(noeud * arbre, ville * arrivee,int *compt, int * ind_plus_court, int * plus_court)
-{
-	if(arbre->ville_noeud == arrivee)
-	{
-		*compt =*compt+1;
-		if(*compt==*ind_plus_court)
-		{
-			affichage_trajet_trouve(arbre);
-		}
-	}
-	else
-	{
-		element_noeud * temp =arbre->liste_fils;
-		while(temp!=NULL)
-		{
-			affichage_petite_duree(temp->contenu,arrivee,compt,ind_plus_court,plus_court);
-			temp = temp->next;
-		}
-	}
 }
 
 //******************************************************************************
@@ -299,26 +292,6 @@ void indice_petite_distance(noeud * arbre, ville * arrivee,int *compt, int * ind
 	}
 }
 
-int distance_trajet(element_ville * arrivee)
-{
-	element_ville * temp = arrivee;
-	int somme_distance=0;
-	while(temp!=NULL)
-	{
-		element_connexion * temp_co = temp->contenu->liste_connexions;
-		while(temp->next!=NULL && temp_co!=NULL && temp_co->contenu->destination!=temp->next->contenu)
-		{
-			temp_co = temp_co->next;
-		}
-		if(temp->next!=NULL)
-		{
-			somme_distance+= temp_co->contenu->distance;
-		}
-		temp= temp->next;
-	}
-	return somme_distance;
-}
-
 void affichage_petite_distance(noeud * arbre, ville * arrivee,int *compt, int * ind_plus_court, int * plus_court)
 {
 	if(arbre->ville_noeud == arrivee)
@@ -340,6 +313,25 @@ void affichage_petite_distance(noeud * arbre, ville * arrivee,int *compt, int * 
 	}
 }
 
+int distance_trajet(element_ville * arrivee)
+{
+	element_ville * temp = arrivee;
+	int somme_distance=0;
+	while(temp!=NULL)
+	{
+		element_connexion * temp_co = temp->contenu->liste_connexions;
+		while(temp->next!=NULL && temp_co!=NULL && temp_co->contenu->destination!=temp->next->contenu)
+		{
+			temp_co = temp_co->next;
+		}
+		if(temp->next!=NULL)
+		{
+			somme_distance+= temp_co->contenu->distance;
+		}
+		temp= temp->next;
+	}
+	return somme_distance;
+}
 
 //******************************************************************************
 // Affichage trajet
@@ -398,3 +390,8 @@ void affichage_trajet_trouve(noeud * arbre)
 	color(15,0);
 }
 
+void color(int t,int f)
+{
+	HANDLE H=GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(H,f*16+t);
+}
