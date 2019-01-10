@@ -378,7 +378,9 @@ void affichage_trajet_trouve(noeud * arbre)
 		if(temp->next!=NULL)
 		{
 			color(8,0);
-			printf("-> %dkm %dmin : ",temp_co->contenu->distance,temp_co->contenu->duree_trajet);
+			printf("-> %dkm",temp_co->contenu->distance);
+			afficher_conversion_heures(temp_co->contenu->duree_trajet);
+			printf(" :");
 			color(15,0);
 			somme_distance+=temp_co->contenu->distance;
 			somme_duree+= temp_co->contenu->duree_trajet;
@@ -386,7 +388,8 @@ void affichage_trajet_trouve(noeud * arbre)
 		temp= temp->next;
 	}
 	color(3,0);
-	printf(" == %dkm %dmin", somme_distance,somme_duree);
+	printf(" == %dkm", somme_distance);
+	afficher_conversion_heures(somme_duree);
 	color(15,0);
 }
 
@@ -394,4 +397,11 @@ void color(int t,int f)
 {
 	HANDLE H=GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(H,f*16+t);
+}
+
+void afficher_conversion_heures(int minutes)
+{
+	int heures = minutes / 60;
+	minutes = minutes % 60;
+	printf(" %dh%dmin",heures,minutes);
 }

@@ -259,5 +259,12 @@ void affichage_trajet_trouve(noeud * arbre);
  */
 void color(int t,int f);
 
+/*
+ * Fonction qui affiche une heure à partir de sa valeur en minutes
+ * Paramètre minutes : valeur en minutes à convertir et afficher
+ * Fonctions appelées : printf
+ * Void
+ */
+void afficher_conversion_heures(int minutes);
 
 #endif
